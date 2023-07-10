@@ -13,6 +13,7 @@ import rftools as rft
 import spicetools as spt
 import smithplot
 import uW
+import ICCAP
 import rftools_noise as rftn 
 import rfdataanalysis as rfda
 import rfplots as rfp
