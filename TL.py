@@ -11,7 +11,8 @@
 
 # Changelog
 
-# - v 0.1: porting of first macros
+# - v 0.2: fix ax.grid(b=True) issue for python > 3.9
+# - v 0.1: porting of first macros, debugged in  "http://localhost:8888/lab/tree/Investigations/211119_OnWaferCal/20_debug_TL_on_ISS_and_ADS_TL_object.ipynb"
 
 # In[ ]:
 
@@ -207,8 +208,8 @@ class ADS(object):
         for TL in cmp:
             ax.plot(TL.FGHz, TL.R, label=TL.name)
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         ax.set_xlabel(f"Freq [GHz]");
         ax.set_ylabel(f"R [Ohm/m]"); 
         if ylim=="auto": pass
@@ -221,8 +222,8 @@ class ADS(object):
         for TL in cmp:
             ax.plot(TL.FGHz, TL.C, label=TL.name)
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         ax.set_xlabel(f"Freq [GHz]");
         ax.set_ylabel(f"C [F/m]");        
         if ylim=="auto": pass
@@ -235,8 +236,8 @@ class ADS(object):
         for TL in cmp:
             ax.plot(TL.FGHz, TL.L, label=TL.name)
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         ax.set_xlabel(f"Freq [GHz]");
         ax.set_ylabel(f"L [H/m]");        
         if ylim=="auto": pass
@@ -249,8 +250,8 @@ class ADS(object):
         for TL in cmp:
             ax.plot(TL.FGHz, TL.G, label=TL.name)
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         ax.set_xlabel(f"Freq [GHz]");
         ax.set_ylabel(f"G [S/m]");        
         if ylim=="auto": pass
@@ -268,8 +269,8 @@ class ADS(object):
         for TL in cmp:
             ax.plot(TL.FGHz, np.abs(TL.Zc), label=TL.name)
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         if line50: ax.axhline(y=50, color='r', linestyle='-')
         ax.set_xlabel(f"Freq [GHz]");
         ax.set_ylabel(f"abs(Zc) [Ohm]");
@@ -285,8 +286,8 @@ class ADS(object):
             if norm: ax.plot(TL.FGHz, TL.att_dB_per_m, label=TL.name)
             else: ax.plot(TL.FGHz, TL.att_dB, label=TL.name)
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         ax.set_xlabel(f"Freq [GHz]");
         if norm: ax.set_ylabel(f"att [dB/m]")
         else:    ax.set_ylabel(f"att [dB]")
@@ -310,8 +311,8 @@ class ADS(object):
                 ax.plot(TL.FGHz, TL.delay_ps, label=TL.name)
                 if line: ax.axhline(y=TL.target_delay*1e12, color='r', linestyle=':')
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         ax.set_xlabel(f"Freq [GHz]");
         if norm:
             ax.set_ylabel(f"delay/target delay []")
@@ -328,8 +329,8 @@ class ADS(object):
         for TL in cmp:
             ax.plot(TL.FGHz, TL.eps, label=TL.name)
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         ax.set_xlabel(f"Freq [GHz]");
         ax.set_ylabel(f"effective dielectric constant []")
         ax.legend()
@@ -340,8 +341,8 @@ class ADS(object):
         for TL in cmp:
             ax.plot(TL.FGHz, TL.phaseShift, label=TL.name)
         ax.minorticks_on()
-        ax.grid(b=True, which='major',ls='-')
-        ax.grid(b=True, which='minor',ls=':')
+        ax.grid(which='major',ls='-')
+        ax.grid(which='minor',ls=':')
         ax.set_xlabel(f"Freq [GHz]");
         ax.set_ylabel(f" phase shift [deg]")
         ax.legend()
@@ -359,7 +360,7 @@ class ADS(object):
         plotSxy(self.F,self.S, title=title, CleanAngle=CleanAngle, logx=logx, GHz=GHz)
 
 
-# this implementation is more sperimental.
+# this implementation of the Eo extraction (the original paper wher ethe extraction were proposed) is more sperimental.
 # I kinds of matches till a certain frequency with the ADS extraction. Then problem in phase or value of Gamma emerges and some aspects of the lines are competely crazy.
 
 # ![image.png](attachment:2c710608-86c2-4327-ae02-308597a3c20e.png)

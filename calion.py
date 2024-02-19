@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# v0.3 : - fix mior bug in compare12ETsets
 # v0.2 : - modify and rename parseWincalSOLTraw to handle both 
 #          separation and on substrate OPENi
 #        - remove ports parameter in parseWincal16ETto12
@@ -18,6 +19,29 @@ import spicetools as spt
 import smithplot
 from smithplot import SmithAxes
 from common import *
+
+
+### don't get why are not visible!
+# nifty utilities
+d2r   = lambda x: np.deg2rad(x)
+r2d   = lambda x: np.rad2deg(x)
+polar = lambda m,r: m*np.exp(1j*d2r(r))
+ralop = lambda z: (np.abs(z),r2d(np.angle(z)))
+cart  = lambda z: (np.abs(z),np.angle(z))
+conj  = lambda z: (np.conjugate(z))
+sdb   = lambda z: (20.0*np.log10(np.abs(z)))
+deg   = lambda z: (np.angle(z, deg=True))
+
+def CleanAngleDeg(n):
+    for i in range(len(n)-1):
+        diff=np.abs(n[i+1]-n[i])
+        if diff<50: continue
+        if np.abs(n[i+1]-n[i]+360)<diff:
+            for j in range(i+1,len(n)):n[j]+=360
+        if np.abs(n[i+1]-n[i]-360)<diff:
+            for j in range(i+1,len(n)):n[j]-=360
+    return n
+
 
 
 whatlist=[ 'ED', 'ES', 'ERT', 'EDr', 'ESr', 'ERTr','EL', 'ETT','ELr', 'ETTr', 'EX', 'EXr','Gamma12','Gamma21']   
@@ -371,7 +395,7 @@ def Apply12TermCorrection(s11, s12, s21, s22, ED, EL, ES, EX, ETT, ERT, EDr, ELr
 
 def compare12ETsets(set1, set2, skipgamma=True, skipiso=True, CleanAngle=True,figsize=(20, 4)):
 
-    func1= lambda x: sdb(x)
+    func1= lambda x: (20.0*np.log10(np.abs(x)))
     lab1='[dB]' 
     if CleanAngle:
         func2= lambda x: CleanAngleDeg(deg(x))
@@ -380,7 +404,7 @@ def compare12ETsets(set1, set2, skipgamma=True, skipiso=True, CleanAngle=True,fi
     lab2='deg'
 
     fw1=1e-9*set1['F']
-    fw2=1e-9*set1['F']
+    fw2=1e-9*set2['F']
 
     if np.all(fw1==fw2):
         cando=True

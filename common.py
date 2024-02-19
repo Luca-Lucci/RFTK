@@ -14,6 +14,7 @@ import spicetools as spt
 import smithplot
 import uW
 import ICCAP
+import calion as cal
 import rftools_noise as rftn 
 import rfdataanalysis as rfda
 import rfplots as rfp

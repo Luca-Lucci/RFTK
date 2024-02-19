@@ -1,4 +1,7 @@
 # -*- coding: latin1 -*-
+# ver. 0.7 2023-09 bug resolved in SS_STM
+# ver. 0.6 2023-07 update graphs to py 3.91 (delete b=True from grid)
+#                  allow SnPparse from list (i.e. zipfiles)
 # ver. 0.5 2023-03 improved export of Touchstone files
 # ver. 0.4 2023-03 fixed SnPparse that was ignoring GHz and onther f-specs
 # ver. 0.3 added some properties to SStrivial
@@ -2070,17 +2073,22 @@ def MDFparseHeader(headers=list(), trans=dict(), debug=False):
     if debug: print(vartypes)
     return varnames, vartypes, data
 
-def SnPparse(filename, SaveComments=False, Verbose=False, ReadFrequency=False):
+def SnPparse(filename="", lines=[], SaveComments=False, Verbose=False, ReadFrequency=False):
     """
     quick routine to load/imoprt/read touchstone Touchstone files saved from wincal.
     Won't support all touchstone file format features
     In principle all kind of matrix (S, Y, Z can be stored). Only Sparams are supported
     only whole line comments are allowed
     only 1 2 3 and 4 port are supported. 5 port and above are not supported
+
+    use filename="namefile.s2p" to OPEN the file
+    or use lines to pass all lines, e.g. if you unpacked from a zipfile
     """
+    
     # parse the file in one go
-    with open(filename) as fin:
-        lines=fin.read().splitlines()
+    if not filename=="": 
+    	with open(filename) as fin:
+        	lines=fin.read().splitlines()
 
     header=list()    # usually "# Hz S RI R 50" 
     comments=list()  # usually at the header of the file, line starting with '!'
@@ -2888,6 +2896,7 @@ class SS_STM(SS_trivial):
     def Cout(self):
         (fstart, fstop)=self.get_span('Cout')
         return np.array( [ (sum(tmp[fstart:fstop])/len(tmp[fstart:fstop])) for tmp in self.Coutv ] )
+    @property
     def Rgd(self):
         (fstart, fstop)=self.get_span('Rgd')
         return np.array( [ (sum(tmp[fstart:fstop])/len(tmp[fstart:fstop])) for tmp in self.Rgdv ] )
