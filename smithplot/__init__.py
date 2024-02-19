@@ -2,6 +2,11 @@
 import matplotlib
 from matplotlib.projections import register_projection
 
+# Luca TAROCCO
+# fix to work on py 3.10
+import collections.abc
+collections.Iterable=collections.abc.Iterable
+
 from .smithaxes import SmithAxes
 
 # check version requierment
